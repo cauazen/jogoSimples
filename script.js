@@ -36,7 +36,7 @@ const imgPersonagem = new Image();
 imgPersonagem.src = './static/download.jpg'; // Substitua pelo caminho da sua imagem
 
 const imgObstaculo = new Image();
-imgObstaculo.src = './static/Herobrine.webp'; // Substitua pelo caminho da sua imagem
+imgObstaculo.src = './static/Herobrine.png'; // Substitua pelo caminho da sua imagem
 
 // Definição do personagem
 const personagem = {
