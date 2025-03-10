@@ -33,10 +33,10 @@ document.addEventListener('click', (e) => {
 
 // Carregar imagens
 const imgPersonagem = new Image();
-imgPersonagem.src = 'https://i.pinimg.com/474x/bc/be/81/bcbe81a9731c37d270fc7e374ad885c3.jpg'; // Substitua pelo caminho da sua imagem
+imgPersonagem.src = './static/download.jpg'; // Substitua pelo caminho da sua imagem
 
 const imgObstaculo = new Image();
-imgObstaculo.src = 'https://static.wikia.nocookie.net/minecraft_br_gamepedia/images/b/b4/Herobrine.png/revision/latest?cb=20160725133638'; // Substitua pelo caminho da sua imagem
+imgObstaculo.src = './static/Herobrine.webp'; // Substitua pelo caminho da sua imagem
 
 // Definição do personagem
 const personagem = {
