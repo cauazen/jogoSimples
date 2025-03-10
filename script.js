@@ -52,7 +52,7 @@ const personagem = {
 const obstaculo = {
     x: canvas.width - 50,
     y: canvas.height - 100,
-    largura: 50,
+    largura: 60,
     altura: 100,
     velocidadex: 5
 };
