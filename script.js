@@ -33,10 +33,10 @@ document.addEventListener('click', (e) => {
 
 // Carregar imagens
 const imgPersonagem = new Image();
-imgPersonagem.src = './static/download.jpg'; // Substitua pelo caminho da sua imagem
+imgPersonagem.src = './static/download.jpg';
 
 const imgObstaculo = new Image();
-imgObstaculo.src = './static/Herobrine.png'; // Substitua pelo caminho da sua imagem
+imgObstaculo.src = './static/Herobrine.png'; 
 
 // Definição do personagem
 const personagem = {
@@ -151,3 +151,7 @@ function loop() {
 
 // Iniciar o loop
 requestAnimationFrame(loop);
+
+//adicionar uma class entidade
+//class personagem entends entidade,adicionar velocidade y
+//class obstaculo extends entidade, adicionar
