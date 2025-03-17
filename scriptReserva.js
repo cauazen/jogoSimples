@@ -2,9 +2,8 @@
 const canvas = document.getElementById('jogo');
 const ctx = canvas.getContext('2d');
 
-const gravidade = 0.55;
+const gravidade = 0.5;
 let gameOver = false;
-let score = 0; // Pontuação inicial
 
 // Carregar imagens
 const imgPersonagem = new Image();
@@ -40,7 +39,8 @@ class Personagem extends Entidade {
 
     saltar() {
         if (!this.#pulando) {
-            this.#velocidadey = 16;
+            console.log('clicou para pular');
+            this.#velocidadey = 15;
             this.#pulando = true;
         }
     }
@@ -53,19 +53,6 @@ class Personagem extends Entidade {
                 this.#velocidadey = 0;
                 this.#pulando = false;
                 this.y = canvas.height - this.altura;
-            }
-        }
-    }
-
-    // Verificar colisão com múltiplos obstáculos
-    verificarColisao(obstaculos) {
-        for (let obstaculo of obstaculos) {
-            if (this.x < obstaculo.x + obstaculo.largura &&
-                this.x + this.largura > obstaculo.x &&
-                this.y < obstaculo.y + obstaculo.altura &&
-                this.y + this.altura > obstaculo.y) {
-                gameOver = true;
-                break; // Interrompe a verificação após a primeira colisão
             }
         }
     }
@@ -82,38 +69,18 @@ class Obstaculo extends Entidade {
     atualizar() {
         this.x -= this.#velocidadex;
         if (this.x <= 0 - this.largura) {
-            // Reposicionar o obstáculo em uma nova posição aleatória mais distante
+            this.x = canvas.width;
+            this.#velocidadex += 0.2;
             let nova_altura = (Math.random() * 50) + 100;
             this.altura = nova_altura;
             this.y = canvas.height - nova_altura;
-            this.x = canvas.width + (Math.random() * 25) + 300;  // Intervalo maior para o próximo obstáculo
         }
     }
 }
 
-// Função para criar obstáculos com distância mínima entre eles
-function distObstaculo() {
-    
-
-    // Verificar a posição do obstáculo anterior (se houver) e garantir a distância mínima
-    if (obstaculos.length > 0) {
-        const ultimoObstaculo = obstaculos[obstaculos.length - 1];
-        // Ajusta a posição x para garantir que o novo obstáculo esteja a uma distância mínima do anterior
-        x = ultimoObstaculo.x + ultimoObstaculo.largura + 100; // Distância mínima de 300 pixels
-    }
-
-    // Criar e adicionar o obstáculo à lista de obstáculos
-    const novoObstaculo = new Obstaculo(x, y, largura, altura, imgObstaculo);
-    obstaculos.push(novoObstaculo);
-}
-
-// Criar instâncias do personagem e obstáculos
+// Criar instâncias do personagem e obstáculo
 const personagem = new Personagem(100, canvas.height - 50, 50, 50, imgPersonagem);
-let obstaculos = [
-    new Obstaculo(canvas.width + 300, canvas.height - 100, 60, 100, imgObstaculo),
-    new Obstaculo(canvas.width + 600, canvas.height - 100, 60, 100, imgObstaculo),
-    new Obstaculo(canvas.width + 900, canvas.height - 100, 60, 100, imgObstaculo)
-];
+const obstaculo = new Obstaculo(canvas.width - 50, canvas.height - 100, 60, 100, imgObstaculo);
 
 // Eventos de entrada
 document.addEventListener('keypress', (e) => {
@@ -129,15 +96,22 @@ document.addEventListener('click', () => {
         personagem.y = canvas.height - 50;
         personagem.velocidadey = 0;
         personagem.pulando = false;
-        obstaculos = [
-            new Obstaculo(canvas.width + 300, canvas.height - 100, 60, 100, imgObstaculo),
-            new Obstaculo(canvas.width + 600, canvas.height - 100, 60, 100, imgObstaculo),
-            new Obstaculo(canvas.width + 900, canvas.height - 100, 60, 100, imgObstaculo)
-        ];
-        score = 0; // Resetar a pontuação
+        obstaculo.x = canvas.width - 50;
+        obstaculo.y = canvas.height - 100;
+        obstaculo.velocidadex = 5;
         requestAnimationFrame(loop);
     }
 });
+
+// Verificar colisão
+function verificarColisao() {
+    if (personagem.x < obstaculo.x + obstaculo.largura &&
+        personagem.x + personagem.largura > obstaculo.x &&
+        personagem.y < obstaculo.y + obstaculo.altura &&
+        personagem.y + personagem.altura > obstaculo.y) {
+        gameOver = true;
+    }
+}
 
 // Exibir Game Over
 function houveColisao() {
@@ -147,13 +121,6 @@ function houveColisao() {
     ctx.font = '48px Arial';
     ctx.fillText('Game Over', (canvas.width / 2) - 120, (canvas.height / 2));
     gameOver = true;
-}
-
-// Exibir Pontuação
-function mostrarPontuacao() {
-    ctx.fillStyle = 'black';
-    ctx.font = '24px Arial';
-    ctx.fillText('Pontuação: ' + score, 10, 30);
 }
 
 // Loop principal
@@ -166,26 +133,10 @@ function loop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     personagem.atualizar();
     personagem.desenhar();
-
-    // Atualizar e desenhar cada obstáculo
-    obstaculos.forEach(obstaculo => {
-        obstaculo.atualizar();
-        obstaculo.desenhar();
-    });
-
-    // Verificar colisão com os obstáculos
-    personagem.verificarColisao(obstaculos);
-
-    // Aumentar a pontuação com o tempo
-    score++;
-
-    // Mostrar a pontuação
-    mostrarPontuacao();
-
+    obstaculo.atualizar();
+    obstaculo.desenhar();
+    verificarColisao();
     requestAnimationFrame(loop);
 }
-
-// Criar obstáculos periodicamente
-setInterval(distObstaculo, 3000); // Cria um novo obstáculo a cada 2 segundos
 
 requestAnimationFrame(loop);
